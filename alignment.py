@@ -2,8 +2,6 @@
 #Python implementation to Smith-Waterman Algorithm for Homework 1 of Bioinformatics class.
 #Forrest Bao, Sept. 26 <http://fsbao.net> <forrest.bao aT gmail.com>
 
-import sys, string
-
 # zeros() was origianlly from NumPy.
 # This version is implemented by alevchuk 2011-04-10
 def zeros(shape):
