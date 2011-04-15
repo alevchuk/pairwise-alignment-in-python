@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./water <(echo NILDCQGAAADLIN) <(echo NILDCQGHHHHDLIN)  BLOSUM62
+./water <(echo ALEXNILDCQGAAA%LIN@%) <(echo PYTHONNILDCQGHHHH%LINJJBB)

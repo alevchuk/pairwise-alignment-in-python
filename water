@@ -25,19 +25,11 @@ f2=open(sys.argv[2], 'r')
 seq2=f2.readline()
 seq2=string.strip(seq2)
 
-#read in BLOSUM62 matrix
-f3=open(sys.argv[3],'r')
-BLOSUM62=[]
-for line in f3.readlines():
-    BLOSUM62.append(map(int, line.split()))
-
-#define similar amino acids
-similarAA=['ST','TS','SP','PS','SA','AS','SG','GS','TP','PT','TA','AT','TG','GT','PA','AP','PG','GP','AG','GA','ND','DN','NE','EN','NQ','QN','DE','ED','DQ',
-'QD','EQ','QE','HR','RH','HK','KH','RK','KR','MI','IM','ML','LM','MV','VM','IL','LI','IV','VI','LV','VL','FY','YF','FW','WF','YW','WY'];
-
 m,n =  len(seq1),len(seq2)  #length of two sequences
 
-penalty=-4;         #define the gap penalty
+match_award      = 10
+mismatch_penalty = -5
+gap_penalty      = -5 # both for opening and extanding
 
 #generate DP table and traceback path pointer matrix
 score=zeros((m+1,n+1))      #the DP table
@@ -45,43 +37,22 @@ pointer=zeros((m+1,n+1))    #to store the traceback path
 
 P=0;
 
-def match_score(alpha,beta,BLOSUM62):   #the function to find match/dismatch score from BLOSUM62 by letters of AAs
-  alphabet={}
-  alphabet["A"] = 0
-  alphabet["R"] = 1
-  alphabet["N"] = 2
-  alphabet["D"] = 3
-  alphabet["C"] = 4
-  alphabet["Q"] = 5
-  alphabet["E"] = 6
-  alphabet["G"] = 7
-  alphabet["H"] = 8
-  alphabet["I"] = 9
-  alphabet["L"] = 10
-  alphabet["K"] = 11
-  alphabet["M"] = 12
-  alphabet["F"] = 13
-  alphabet["P"] = 14
-  alphabet["S"] = 15
-  alphabet["T"] = 16
-  alphabet["W"] = 17
-  alphabet["Y"] = 18
-  alphabet["V"] = 19
-  alphabet["B"] = 20
-  alphabet["Z"] = 21
-  alphabet["X"] = 22
-  lut_x=alphabet[alpha]
-  lut_y=alphabet[beta]
-  return BLOSUM62[lut_x][lut_y]
+def match_score(alpha, beta):
+    if alpha == beta:
+        return match_award
+    elif alpha == '-' or beta == '-':
+        return gap_penalty
+    else:
+        return mismatch_penalty
 
 max_score=P;        #initial maximum score in DP table
 
 #calculate DP table and mark pointers
 for i in range(1,m+1):
     for j in range(1,n+1):
-        score_up=score[i-1][j]+penalty;
-        score_down=score[i][j-1]+penalty;
-        score_diagonal=score[i-1][j-1]+match_score(seq1[i-1],seq2[j-1],BLOSUM62);
+        score_up=score[i-1][j] + gap_penalty
+        score_down=score[i][j-1] + gap_penalty
+        score_diagonal=score[i-1][j-1]+match_score(seq1[i-1],seq2[j-1]);
         score[i][j]=max(0,score_up,score_down,score_diagonal);
         if score[i][j]==0:
             pointer[i][j]=0; #0 means end of the path
@@ -125,32 +96,24 @@ align2=align2[::-1];    #reverse sequence 2
 i,j=0,0;
 
 #calcuate identity, similarity, score and aligned sequeces
-def result(align1,align2,BLOSUM62):
+def result(align1,align2):
     symbol='';
     found=0;
     score=0;
-    penalty=-4;
     identity,similarity=0,0;
     for i in range(0,len(align1)):
         if align1[i]==align2[i]:                #if two AAs are the same, then output the letter
             symbol=symbol+align1[i];
             identity=identity+1;
             similarity=similarity+1;
-            score=score+match_score(align1[i],align2[i],BLOSUM62);
+            score=score+match_score(align1[i],align2[i]);
         elif align1[i]!=align2[i] and align1[i]!='-' and align2[i]!='-': #if they are not identical and none of them is gap
-            score=score+match_score(align1[i],align2[i],BLOSUM62);
-            for j in range(0,len(similarAA)-1):
-                if align1[i]+align2[i]==similarAA[j]: #search whether these two AAs form a pair in similar AA table
-                    found=1;
-            if found==1:
-                symbol=symbol+':';          #if they are similar AA, output ':'
-                similarity=similarity+1;
-            if found==0:
-                    symbol=symbol+' ';      #o/w, output a space
+            score=score+match_score(align1[i],align2[i]);
+            symbol += ' '
             found=0;
         elif align1[i]=='-' or align2[i]=='-':          #if one of them is a gap, output a space
             symbol=symbol+' ';
-            score=score+penalty;
+            score = score + gap_penalty
 
     identity=float(identity)/len(align1)*100;
     similarity=float(similarity)/len(align2)*100;
@@ -163,4 +126,4 @@ def result(align1,align2,BLOSUM62):
     print align2
 #END of function result
 
-result(align1,align2,BLOSUM62)
+result(align1,align2)

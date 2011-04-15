@@ -2,7 +2,7 @@ Pairwise alignment in Python.
 
 My contribution will be:
  * Code cleanup
- * Support of arbitrary alphabets of the string to be aligned
+ * Support of arbitrary alphabets of input strings (no similarity matrix)
  * Support of both variants:
    1. Smith-Waterman = local alignment
    2. Needleman-Wunsch = global alignment
