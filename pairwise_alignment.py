@@ -82,17 +82,16 @@ def water(seq1, seq2):
     
     i,j = 0,0
     
-    #calcuate identity, similarity, score and aligned sequeces
+    #calcuate identity, score and aligned sequeces
     symbol = ''
     found = 0
     score = 0
-    identity, similarity = 0, 0
+    identity = 0
     for i in range(0,len(align1)):
         # if two AAs are the same, then output the letter
         if align1[i] == align2[i]:                
             symbol = symbol + align1[i]
             identity = identity + 1
-            similarity = similarity + 1
             score += match_score(align1[i], align2[i])
     
         # if they are not identical and none of them is gap
@@ -107,10 +106,8 @@ def water(seq1, seq2):
             score += gap_penalty
     
     identity = float(identity) / len(align1) * 100
-    similarity = float(similarity) / len(align2) * 100
     
     print 'Identity =', "%3.3f" % identity, 'percent'
-    print 'Similarity =', "%3.3f" % similarity, 'percent'
     print 'Score =', score
     print align1
     print symbol
