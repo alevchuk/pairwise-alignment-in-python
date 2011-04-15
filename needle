@@ -12,4 +12,4 @@ f2 = open(sys.argv[2], 'r')
 seq2 = f2.readline()
 seq2 = string.strip(seq2)
 
-alignment.water(seq1, seq2)
+alignment.needle(seq1, seq2)

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+./needle <(echo ALEXNILDCQGAAA%LIN@%) <(echo PYTHONNILDCQGHHHH%LINJJBB)
+echo
+
+./needle <(echo ONNALEXNILDCQGAAA%LIN@%BBSDF) <(echo PYTHONNILDCQGHHHH%LINJJBB)
