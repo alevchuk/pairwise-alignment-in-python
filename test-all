@@ -1,5 +1,12 @@
 #!/bin/bash
 
+echo '/////////// water ///////////'
+./water <(echo ALEXNILDCQGAAA%LIN@%) <(echo PYTHONNILDCQGHHHH%LINJJBB)
+echo
+echo
+echo
+
+echo '/////////// needle ///////////'
 ./needle <(echo ALEXNILDCQGAAA%LIN@%) <(echo PYTHONNILDCQGHHHH%LINJJBB)
 echo
 
